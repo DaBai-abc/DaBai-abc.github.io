@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>大白 · 个人主页</title>
+<meta name="description" content="大白 (DaBai) 的个人主页：写作者、独立开发者、创造者。" />
+
+<!--
+  ============================================================
+  自定义风格指南（改这里就够了）：
+  1. 配色：改下面 :root 里的 --accent / --bg / --text 等变量。
+  2. 内容：直接改 <body> 里的文字即可。
+  3. 暗色模式：已自动适配系统偏好，如需强制可删掉 prefers-color-scheme 那段。
+  4. 字体：--font 一行即可整体换字体。
+  ============================================================
+-->
+
+<style>
+  :root {
+    --bg: #f7f7fb;
+    --bg-soft: #ffffff;
+    --text: #1c1c28;
+    --text-soft: #5b5b6b;
+    --accent: #5b5bf0;
+    --accent-2: #9b5bf0;
+    --border: #e6e6ef;
+    --shadow: 0 10px 40px rgba(40, 40, 90, 0.08);
+    --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei",
+            "Noto Sans SC", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --radius: 18px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e0e16;
+      --bg-soft: #171722;
+      --text: #f0f0f6;
+      --text-soft: #a6a6b8;
+      --border: #2a2a38;
+      --shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    padding: 0 20px;
+  }
+
+  .wrap { max-width: 880px; margin: 0 auto; }
+
+  /* ---------- 顶部 Hero ---------- */
+  header {
+    min-height: 86vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 18px;
+    animation: rise 0.9s ease both;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--border);
+    background: var(--bg-soft);
+    padding: 6px 14px;
+    border-radius: 999px;
+  }
+
+  h1 {
+    font-size: clamp(44px, 9vw, 84px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    background: linear-gradient(120deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .tagline { font-size: clamp(17px, 3vw, 21px); color: var(--text-soft); max-width: 560px; }
+
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+
+  a.btn {
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  a.btn.primary { background: linear-gradient(120deg, var(--accent), var(--accent-2)); color: #fff; }
+  a.btn.ghost { color: var(--text); border: 1px solid var(--border); background: var(--bg-soft); }
+  a.btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+  /* ---------- 区块 ---------- */
+  section { padding: 70px 0; border-top: 1px solid var(--border); animation: rise 0.9s ease both; }
+  h2 { font-size: 28px; margin-bottom: 22px; letter-spacing: -0.01em; }
+  p.lead { color: var(--text-soft); font-size: 17px; max-width: 640px; }
+
+  /* ---------- 项目卡片 ---------- */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-top: 28px; }
+  .card {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    transition: transform 0.18s ease, border-color 0.18s ease;
+  }
+  .card:hover { transform: translateY(-4px); border-color: var(--accent); }
+  .card h3 { font-size: 19px; margin-bottom: 8px; }
+  .card span.k { font-size: 12px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; }
+  .card p { color: var(--text-soft); font-size: 15px; margin-top: 8px; }
+
+  /* ---------- 链接 ---------- */
+  .links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 24px; }
+  .links a {
+    text-decoration: none; color: var(--text);
+    border: 1px solid var(--border); background: var(--bg-soft);
+    padding: 12px 20px; border-radius: 12px; font-weight: 500;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .links a:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+  footer { padding: 50px 0 70px; color: var(--text-soft); font-size: 14px; text-align: center; }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 600px) {
+    header { min-height: 78vh; }
+    section { padding: 54px 0; }
+  }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <!-- ============ HERO ============ -->
+  <header>
+    <span class="badge">Personal Site</span>
+    <h1>大白</h1>
+    <p class="tagline">DaBai · 写作者 / 独立开发者 / 创造者。<br/>把脑子里跑了一万遍的东西，落地成字、成游戏、成工具。</p>
+    <div class="cta">
+      <a class="btn primary" href="#projects">看看我在做什么</a>
+      <a class="btn ghost" href="https://github.com/DaBai-abc" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </header>
+
+  <!-- ============ ABOUT ============ -->
+  <section id="about">
+    <h2>关于我</h2>
+    <p class="lead">
+      这里是我的个人主页。我同时折腾几件事：写一部长篇小说、做一款独立游戏、顺手写些提升效率的小工具。
+      下面是我目前主要在推进的项目，点开看看。
+      <!-- 想改简介？直接替换这段 <p> 里的文字即可。 -->
+    </p>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section id="projects">
+    <h2>我正在做的事</h2>
+    <div class="cards">
+      <div class="card">
+        <span class="k">Writing</span>
+        <h3>长篇小说《有岸》</h3>
+        <p>厦门背景，4 幕 80 章结构，一场关于人与岸的长程叙事。</p>
+      </div>
+      <div class="card">
+        <span class="k">Game</span>
+        <h3>游戏《清源塔》</h3>
+        <p>基于团结引擎的 roguelike 爬塔，坚持程序化美术路线。</p>
+      </div>
+      <div class="card">
+        <span class="k">Tooling</span>
+        <h3>效率工具</h3>
+        <p>多站点网页自动化脚本，把重复操作交给机器。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LINKS ============ -->
+  <section id="links">
+    <h2>在哪里找到我</h2>
+    <div class="links">
+      <a href="https://github.com/DaBai-abc" target="_blank" rel="noopener">GitHub</a>
+      <a href="mailto:you@example.com">Email</a>
+      <!-- 想加更多？复制一行 <a> 改成你的链接即可。 -->
+    </div>
+  </section>
+
+  <footer>
+    © <span id="year"></span> 大白 · Built with GitHub Pages · 风格可自由定制
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
