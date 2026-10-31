@@ -1,0 +1,5 @@
+# 明文源文件绝不入库：加密产物才是要发布的文件
+*.src.html
+*.plain.html
+vault-src/
+pages/
