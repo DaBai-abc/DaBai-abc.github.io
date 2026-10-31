@@ -198,12 +198,8 @@
   <!-- ============ BLOG ============ -->
   <section id="blog">
     <h2>最近在写</h2>
-    <div class="cards">
-      <a class="card" href="/blog/welcome.html" style="text-decoration:none;color:inherit;">
-        <span class="k">随笔</span>
-        <h3>开篇：这个博客要写什么</h3>
-        <p>教程、笔记与资源，以及资源怎么拿。</p>
-      </a>
+    <!-- 最新两篇由 /data/posts.json 自动填充，发文无需手改本文件 -->
+    <div class="cards" id="recent-posts">
       <a class="card" href="/blog/" style="text-decoration:none;color:inherit;">
         <span class="k">Index</span>
         <h3>全部文章 →</h3>
@@ -217,6 +213,7 @@
     <h2>在哪里找到我</h2>
     <div class="links">
       <a href="/blog/">博客</a>
+      <a href="/blog/resources.html">资源</a>
       <a href="/tools/">工具箱（需口令）</a>
       <a href="https://github.com/DaBai-abc" target="_blank" rel="noopener">GitHub</a>
       <a href="mailto:you@example.com">Email</a>
@@ -232,6 +229,31 @@
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  // 首页「最近在写」：取 posts.json 里最新的两篇，插到「全部文章」卡片前面
+  (function () {
+    var wrap = document.getElementById('recent-posts');
+    if (!wrap || !window.fetch) return;
+    fetch('/data/posts.json', { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (posts) {
+        if (!Array.isArray(posts) || !posts.length) return;
+        var esc = function (s) {
+          return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+          });
+        };
+        var html = posts.slice(0, 2).map(function (p) {
+          return '<a class="card" href="/blog/' + esc(p.slug) + '.html" style="text-decoration:none;color:inherit;">'
+            + '<span class="k">' + esc(p.tag || '文章') + '</span>'
+            + '<h3>' + esc(p.title) + '</h3>'
+            + '<p>' + esc(p.summary || '') + '</p>'
+            + '</a>';
+        }).join('');
+        wrap.insertAdjacentHTML('afterbegin', html);
+      })
+      .catch(function () { /* 静默失败，保留「全部文章」入口 */ });
+  })();
 </script>
 </body>
 </html>

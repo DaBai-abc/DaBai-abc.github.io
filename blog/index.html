@@ -25,24 +25,45 @@
     <p>把踩过的坑、跑通的流程写下来。偶尔也整理一些可复用的资源。</p>
   </div>
 
-  <!-- ============================================================
-       新增文章：复制下面这一个 <a class="post-item"> 整块，
-       改 href（指向 /blog/你的文件名.html）、日期、标题、摘要、标签。
-       最新的放最上面。
-       ============================================================ -->
-  <div class="post-list">
-
-    <a class="post-item" href="/blog/welcome.html">
-      <span class="date">2026-10-31</span>
-      <h2>开篇：这个博客要写什么</h2>
-      <p>记录教程、笔记与工具实践。这是第一篇文章，也是一份写作与发布的说明。</p>
-      <div><span class="tag">随笔</span></div>
-    </a>
-
+  <!-- 文章列表由 /data/posts.json 渲染，发文无需手改本文件 -->
+  <div class="post-list" id="post-list">
+    <noscript><p>本列表需要 JavaScript 才能显示。</p></noscript>
   </div>
 
   <footer>© <span id="year"></span> 大白 · Built with GitHub Pages</footer>
 </div>
-<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+  });
+}
+
+fetch('/data/posts.json', { cache: 'no-cache' })
+  .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then(function (posts) {
+    var box = document.getElementById('post-list');
+    if (!Array.isArray(posts) || !posts.length) {
+      box.innerHTML = '<p style="color:var(--text-soft)">还没有文章。</p>';
+      return;
+    }
+    box.innerHTML = posts.map(function (p) {
+      var tags = (p.tags || [p.tag]).filter(Boolean)
+        .map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join('');
+      return '<a class="post-item" href="/blog/' + esc(p.slug) + '.html">'
+        + '<span class="date">' + esc(p.date) + '</span>'
+        + '<h2>' + esc(p.title) + '</h2>'
+        + '<p>' + esc(p.summary || '') + '</p>'
+        + '<div>' + tags + '</div>'
+        + '</a>';
+    }).join('');
+  })
+  .catch(function () {
+    document.getElementById('post-list').innerHTML =
+      '<p style="color:var(--text-soft)">文章列表加载失败，<a href="/data/posts.json">点此查看数据</a>。</p>';
+  });
+</script>
 </body>
 </html>

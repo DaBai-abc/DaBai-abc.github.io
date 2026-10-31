@@ -1,0 +1,46 @@
+name: build-posts
+
+# 只要 content/ 里的 Markdown 变了（含在 GitHub 网页上直接新建/编辑），
+# 就自动把文章页和文章列表重新生成并提交回去。
+# 所以手机上发文 = 新建一个 content/xxx.md，别的都不用管。
+
+on:
+  push:
+    paths:
+      - "content/**.md"
+      - "templates/post-template.html"
+      - "publish.py"
+      - ".github/workflows/publish.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-posts
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: 生成文章页
+        run: python3 publish.py build
+
+      - name: 提交并推送
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "没有变化，跳过提交"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "build: rebuild posts from content/"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
