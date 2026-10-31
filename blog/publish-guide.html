@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<!-- ============================================================
+     文章模板 · 由 publish.py 自动填充，一般不需要手改。
+
+     手写新文章（不用 Markdown）时也可以复制本文件到 /blog/ 下，
+     把下面 {{...}} 占位符全部替换成实际内容。
+     ============================================================ -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>在这个博客上发文：三条路，从电脑到手机 · 大白</title>
+<meta name="description" content="GitHub Pages 没有后台，所以「发布」只有一种本质：写文件再推送。这里把它拆成三条不同重量的路。" />
+<link rel="stylesheet" href="/assets/blog.css" />
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="nav">
+    <a class="brand" href="/">大白<span>.</span></a>
+    <div class="menu">
+      <a href="/">首页</a>
+      <a href="/blog/">博客</a>
+      <a href="/blog/resources.html">资源</a>
+      <a href="https://github.com/DaBai-abc" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </nav>
+
+  <article>
+    <h1>在这个博客上发文：三条路，从电脑到手机</h1>
+    <div class="meta">
+      <span>2026-10-31</span>
+      <span class="tag">教程</span>
+    </div>
+
+<p>这个站点是丢在 GitHub Pages 上的静态文件，没有数据库、没有后台、没有登录框。所以它天生不会给你一个「新建文章」的按钮——按钮背后得有人替你写文件、改列表、再推上去。</p>
+
+<p>想通这一点，剩下的只是「谁来做这几步」。三条路，从重到轻。</p>
+
+<h2>一、电脑上一条命令（写长文用这条）</h2>
+
+<p>仓库根目录有个 <code>publish.py</code>，只用 Python 标准库，不用装依赖。</p>
+
+<p>先起草：</p>
+
+<pre><code>python3 publish.py new --title &quot;标题&quot; --tag 教程</code></pre>
+
+<p>它会在 <code>content/</code> 下生成一个 Markdown 文件，开头是属性区，下面是正文：</p>
+
+<pre><code>---
+title: 标题
+date: 2026-10-31
+tag: 教程
+summary: 一句话说清这篇解决什么问题
+slug: your-post-name
+---</code></pre>
+
+<p><code>slug</code> 就是文章地址里那一段，只能用小写字母、数字和连字符。中文标题必须手动给一个。</p>
+
+<p>写完执行：</p>
+
+<pre><code>python3 publish.py post content/your-post-name.md</code></pre>
+
+<p>它做四件事：渲染成 <code>blog/your-post-name.html</code>、在 <code>data/posts.json</code> 里记一笔、提交、推送。一两分钟后线上就有了。</p>
+
+<h2>二、手机上直接新建文件（随手记用这条）</h2>
+
+<p>不用开电脑，浏览器就能干：</p>
+
+<ol><li>打开仓库的 <code>content/</code> 目录</li><li>Add file → Create new file</li><li>文件名写成 <code>xxx.md</code>，内容照上面的属性区格式写</li><li>提交</li></ol>
+
+<p>仓库里配了一个自动构建（GitHub Actions），只要 <code>content/</code> 里的 Markdown 有变化，它就会自动把文章页和列表重新生成好再提交回来，大约一分钟。</p>
+
+<div class="callout"><span class="label">文件名和 slug 要一致</span><p>文件叫 <code>xxx.md</code>，属性区里写 <code>slug: xxx</code>，两处一致最不容易出错。地址就是 <code>/blog/xxx.html</code>。</p></div>
+
+<h2>三、改一条 JSON（加资源链接用这条）</h2>
+
+<p>「资源」页不写死在 HTML 里，它读的是 <code>data/resources.json</code>。加一条资源就是往数组里加一个对象：</p>
+
+<pre><code>{
+  &quot;title&quot;: &quot;资源名&quot;,
+  &quot;desc&quot;: &quot;一句话说明包含什么、适合谁&quot;,
+  &quot;url&quot;: &quot;https://付费平台链接&quot;,
+  &quot;tag&quot;: &quot;模板&quot;,
+  &quot;date&quot;: &quot;2026-10-31&quot;
+}</code></pre>
+
+<p>在 GitHub 网页上点开这个文件、点铅笔图标、加完提交，同样是自动生效。电脑上也可以一条命令：</p>
+
+<pre><code>python3 publish.py link --title &quot;资源名&quot; --url &quot;https://...&quot; --desc &quot;说明&quot; --tag 模板</code></pre>
+
+<h2>三件容易踩的事</h2>
+
+<ul><li><strong>资源页是公开的</strong>，别把网盘直链写进去，只放第三方平台的入口。</li><li><strong>图片</strong>要放进 <code>assets/</code>，正文里用 <code>/assets/xxx.png</code> 这种站内绝对路径，别用相对路径，否则从不同层级打开会裂。</li><li><strong>想撤回一篇文章</strong>：删掉 <code>content/</code> 里那个 md，再手动删 <code>blog/xxx.html</code>，最后从 <code>data/posts.json</code> 里删掉那一条。三处都清干净，列表才不会留一个点进去 404 的入口。</li></ul>
+
+<hr />
+
+<p>本质就这么简单：这个博客的「后台」，是一个 Markdown 文件加一次 git 推送。剩下的工作，交给脚本。</p>
+
+    <hr />
+    <p><a class="btn ghost" href="/blog/">← 返回文章列表</a></p>
+  </article>
+
+  <footer>© <span id="year"></span> 大白 · Built with GitHub Pages</footer>
+</div>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
