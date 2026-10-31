@@ -162,6 +162,30 @@ def md_to_html(md: str) -> str:
             out.append("<pre><code>%s</code></pre>" % esc("\n".join(buf)))
             continue
 
+        # 表格：| a | b |  下一行是 |---|---|
+        if s.startswith("|") and s.endswith("|") and i + 1 < n \
+                and re.match(r"^\|[\s:\-|]+\|$", lines[i + 1].strip()):
+
+            def cells(row: str) -> list[str]:
+                return [c.strip() for c in row.strip().strip("|").split("|")]
+
+            head = cells(s)
+            i += 2
+            body: list[list[str]] = []
+            while i < n and lines[i].strip().startswith("|"):
+                body.append(cells(lines[i].strip()))
+                i += 1
+            thead = "".join("<th>%s</th>" % inline(c) for c in head)
+            rows = "".join(
+                "<tr>%s</tr>" % "".join("<td>%s</td>" % inline(c) for c in row)
+                for row in body
+            )
+            out.append(
+                '<div class="table-wrap"><table><thead><tr>%s</tr></thead>'
+                "<tbody>%s</tbody></table></div>" % (thead, rows)
+            )
+            continue
+
         # 分隔线
         if s in ("---", "***", "___"):
             out.append("<hr />")

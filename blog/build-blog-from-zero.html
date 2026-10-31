@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<!-- ============================================================
+     文章模板 · 由 publish.py 自动填充，一般不需要手改。
+
+     手写新文章（不用 Markdown）时也可以复制本文件到 /blog/ 下，
+     把下面 {{...}} 占位符全部替换成实际内容。
+     ============================================================ -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>从零搭一个 GitHub Pages 博客：借 AI 一条路，纯手搓一条路 · 大白</title>
+<meta name="description" content="把这个站点从头复刻一遍。路线 A 用 WorkBuddy 一步步对话搭起来，路线 B 完全不靠 AI 手写 HTML，两条路都标明了哪些步骤有得选、哪些步骤只有一种做法。" />
+<link rel="stylesheet" href="/assets/blog.css" />
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="nav">
+    <a class="brand" href="/">大白<span>.</span></a>
+    <div class="menu">
+      <a href="/">首页</a>
+      <a href="/blog/">博客</a>
+      <a href="/blog/resources.html">资源</a>
+      <a href="https://github.com/DaBai-abc" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </nav>
+
+  <article>
+    <h1>从零搭一个 GitHub Pages 博客：借 AI 一条路，纯手搓一条路</h1>
+    <div class="meta">
+      <span>2026-10-31</span>
+      <span class="tag">教程</span>
+    </div>
+
+<p>这篇教程的目标很具体：把「dabai-abc.github.io」这个站从头搭一遍。你现在看到的首页、博客列表、文章页、资源页，都是下面这些步骤的产物。</p>
+
+<p>两条路，选一条走完就行：</p>
+
+<div class="table-wrap"><table><thead><tr><th>路线</th><th>适合谁</th><th>需要准备</th><th>大概耗时</th><th>后续维护</th></tr></thead><tbody><tr><td>A · 借 WorkBuddy</td><td>不想碰命令行、想快速成型</td><td>GitHub 账号、WorkBuddy 桌面端</td><td>半小时左右</td><td>一条命令发文</td></tr><tr><td>B · 纯手搓</td><td>想搞明白每个文件在干什么</td><td>GitHub 账号、Git、任意编辑器</td><td>一到两小时</td><td>手写 HTML 发文</td></tr></tbody></table></div>
+
+<div class="callout"><span class="label">怎么读这篇</span><p>标题后写 <strong>唯一</strong> 的步骤：只有一种做法，不用再找替代方案，照做。</p>
+
+<p>标题后写了「两种做法」「三种做法」的：有替代方案，挑顺手的走。</p>
+
+<p>没写标记的：默认有选择空间，按自己情况定。</p></div>
+
+<h2>先把前提说清楚</h2>
+
+<p>GitHub Pages 是纯静态托管：它只把仓库里的文件原样发给浏览器，不执行后端代码，没有数据库，也没有登录。所以它能做的事是「展示」，不能做「管理」。这一点决定了后面所有的设计：发文 = 往仓库里写文件再推送，没有别的路径。</p>
+
+<p>另外两个成本事实，早点知道能少走弯路：</p>
+
+<ul><li>公开仓库的 Pages 完全免费，流量也不额外收费。</li><li>私有仓库想开 Pages 需要 GitHub Pro。也就是说，<strong>别指望用私有仓库来藏内容</strong>，真要不公开，得在页面层面做加密（后面路线 A 有一节讲）。</li></ul>
+
+<hr />
+
+<h2>路线 A：借 WorkBuddy 搭</h2>
+
+<p>这条路的核心思路是：你负责说清「要什么」，它负责写文件、跑命令、推代码。整个过程中你真正要动手的地方只有三个——装软件、点一次 GitHub 网页上的开关、以及看结果。</p>
+
+<h3>第 1 步 · 装 WorkBuddy（<strong>唯一</strong>）</h3>
+
+<p>没有替代方案，这条路就是靠它。装桌面端，登录，然后给它一个空目录当工作区（比如 <code>~/github</code>），授权它读写这个目录、执行终端命令。</p>
+
+<p>授权范围建议只给这个目录，不要给整个家目录——后面它会跑 <code>git</code>、写文件、起本地服务器，权限收窄一点更安心。</p>
+
+<h3>第 2 步 · 注册 GitHub 账号并想好站点地址（<strong>唯一</strong>）</h3>
+
+<p>用户名一旦定下来，免费版域名就跟着定了：<code>https://用户名.github.io</code>。改用户名会导致旧地址失效，所以第一次就取个能长期用的。</p>
+
+<h3>第 3 步 · 建仓库（两种做法）</h3>
+
+<p>仓库名有硬性要求：必须是 <code>用户名.github.io</code>，一字不差，包括大小写。名字不对的话，Pages 会把它当成「项目页」，地址变成 <code>用户名.github.io/仓库名/</code>，多一层路径，站内所有绝对路径全要改。</p>
+
+<p>做法一，你自己在网页上建：github.com → New repository → 名字填 <code>用户名.github.io</code> → Public → 不要勾选任何初始化文件 → Create。</p>
+
+<p>做法二，让 WorkBuddy 代跑：</p>
+
+<pre><code>gh auth login          # 只需要做一次
+gh repo create 用户名.github.io --public</code></pre>
+
+<p><code>gh</code> 是 GitHub 官方命令行工具，没装的话先 <code>brew install gh</code>。两条路结果一样，做法二省一次手动点击，但 <code>gh auth login</code> 的浏览器授权还是得你本人确认。</p>
+
+<h3>第 4 步 · 让 WorkBuddy 生成首页</h3>
+
+<p>这是整条路里最关键的一次对话。提示词写得越具体，返工越少。可以直接用这段：</p>
+
+<pre><code>在 ~/github 下新建目录 用户名.github.io，里面放一个 index.html：
+1. 纯静态单文件，样式写在 &lt;style&gt; 里，不引用任何外部 CDN 和字体
+2. 所有颜色、圆角、字体定义成 :root 里的 CSS 变量，方便以后改主题
+3. 支持系统暗色模式（prefers-color-scheme）
+4. 内容区最大宽度 880px，手机上不出横向滚动条
+5. 结构：大标题 + 一句话简介 + 三张项目卡片 + 博客入口 + GitHub 链接 + 页脚年份自动更新
+6. 顺便 git init，第一个提交叫 init</code></pre>
+
+<p>说完它会一次性把文件写好、<code>git init</code>、提交。你要做的是看一眼产出：文件在哪、变量是不是真的提出来了、有没有偷偷引外部字体。</p>
+
+<p>如果对样式不满意，别自己改 CSS，直接说「标题渐变改成从蓝到紫，卡片 hover 上浮 2px」——它改得比你手改快。</p>
+
+<h3>第 5 步 · 加博客区</h3>
+
+<p>首页有了，再让它长出一个博客。这一步产出的东西比首页多，值得说细一点：</p>
+
+<pre><code>给这个站加一个博客区：
+1. 新建 assets/blog.css，作为博客和文章页共用的样式，配色沿用首页的 CSS 变量
+2. 新建 blog/index.html，文章列表页
+3. 新建 templates/post-template.html，作为以后新文章的空模板
+4. 先放一篇示例文章 blog/welcome.html，并从首页链过去
+5. 所有站内链接用绝对路径（/blog/、/assets/blog.css），不要用相对路径</code></pre>
+
+<p>第 5 条别省。绝对路径的意思是无论从 <code>/blog/</code> 还是 <code>/blog/xxx.html</code> 打开，样式都指向同一个文件；相对路径在子目录里会断。</p>
+
+<p>做完之后目录长这样：</p>
+
+<pre><code>用户名.github.io/
+├── index.html
+├── assets/
+│   └── blog.css
+├── blog/
+│   ├── index.html
+│   └── welcome.html
+└── templates/
+    └── post-template.html</code></pre>
+
+<h3>第 6 步 · 本地预览（<strong>唯一</strong>）</h3>
+
+<p>只能用「起一个本地 HTTP 服务器」这一种方式，双击 HTML 文件不行。原因是站内用的是 <code>/assets/blog.css</code> 这种从根目录算起的绝对路径，<code>file://</code> 协议下根目录是磁盘根，样式直接 404，页面会变成没有样式的裸文本——很多人到这一步以为样式写崩了，其实只是打开方式不对。</p>
+
+<pre><code>cd ~/github/用户名.github.io
+python3 -m http.server 8080</code></pre>
+
+<p>然后浏览器开 <code>http://localhost:8080</code>。macOS 自带 python3，不用装东西。看完记得把服务器停掉，不然 8080 端口一直占着。</p>
+
+<h3>第 7 步 · 推上去（<strong>唯一</strong>动作，授权方式可选）</h3>
+
+<p>动作只有一个：<code>git push</code>。第一次推会要求授权，两种方式二选一：</p>
+
+<ul><li><strong>Personal Access Token</strong>：GitHub → Settings → Developer settings → Personal access tokens → Fine-grained token，只勾选这一个仓库的 Contents 读写权限。推送时用户名填 GitHub 用户名，密码位置粘 token。</li><li><strong>SSH 密钥</strong>：<code>ssh-keygen -t ed25519</code>，把 <code>~/.ssh/id_ed25519.pub</code> 的内容贴到 GitHub → Settings → SSH keys。配好之后不用再输任何东西。</li></ul>
+
+<p>让 WorkBuddy 推的话，它会自己处理这些，但 token 需要你给一次。给完记得让它把 token 写进系统钥匙串而不是提交进仓库——<code>git remote -v</code> 里如果出现带 token 的地址，那个 token 等于半公开了。</p>
+
+<h3>第 8 步 · 开启 Pages（<strong>唯一</strong>）</h3>
+
+<p>这一步没有 API 可替代（虽然 <code>gh api</code> 能调，但新手没必要），只能在网页上点：</p>
+
+<p>仓库 → Settings → 左侧 Pages → Source 选 <code>Deploy from a branch</code> → Branch 选 <code>main</code>、目录选 <code>/ (root)</code> → Save。</p>
+
+<p>保存后等一到三分钟。期间可以在仓库的 Actions 标签页看到一条 <code>pages build and deployment</code> 在跑，跑完变绿就上线了。</p>
+
+<h3>第 9 步 · 验收</h3>
+
+<p>不要凭感觉判断「应该好了」，用地址验：</p>
+
+<pre><code>curl -s -o /dev/null -w '%{http_code}\n' https://用户名.github.io/</code></pre>
+
+<p>返回 200 才算上线。首页 200 但博客 404，通常是第 5 步的目录名或大小写写错了（线上是 Linux，区分大小写；本地 macOS 默认不区分，这类错误本地测不出来）。</p>
+
+<p>验收清单：首页能开、样式在、暗色模式下文字看得清、<code>/blog/</code> 能开、随便点一篇文章能回来、手机上不出横向滚动条。</p>
+
+<h3>第 10 步 · 加一条发文流水线</h3>
+
+<p>到这一步站点已经能用了，但发文仍然要手改 HTML：复制模板、改内容、再改一次列表页。一篇两篇还行，十篇之后必然漏。</p>
+
+<p>所以让 WorkBuddy 补一套发布工具。这一段对话我用的是：</p>
+
+<pre><code>给这个博客加一套发文流水线，要求：
+1. 写一个 publish.py，只用 Python 标准库，不装依赖
+2. 支持 new / post / link / list / build 五个子命令
+3. 文章源文件放 content/*.md，开头是 --- 包起来的属性区（title/date/tag/summary/slug）
+4. post 命令要能：渲染 Markdown 成 blog/&lt;slug&gt;.html、更新 data/posts.json、git 提交推送
+5. 加 .github/workflows/publish.yml，push content/**.md 时自动重建
+6. 文章列表页改成读 data/posts.json，用 JS 渲染，这样以后不用手改列表</code></pre>
+
+<p>它最终产出的就是现在这套东西。你可以直接在这个仓库里看源码，关键点有三个：</p>
+
+<ul><li><strong>文章列表不再写死在 HTML 里</strong>。<code>blog/index.html</code> 只负责 fetch <code>data/posts.json</code> 然后渲染，发文只改数据。</li><li><strong>手机上也能发</strong>。<code>content/</code> 里新建一个 <code>.md</code>，GitHub Actions 会自动重建并提交，不用开电脑。</li><li><strong>重复构建不会打乱顺序</strong>。<code>posts.json</code> 里除了日期还存了一个写入时刻，同一个日期发两篇也不会乱。</li></ul>
+
+<p>日常发文就一条命令：</p>
+
+<pre><code>python3 publish.py new --title &quot;标题&quot; --tag 教程
+python3 publish.py post content/标题.md</code></pre>
+
+<h3>可选加装</h3>
+
+<p>三个都不影响主流程，需要时再做：</p>
+
+<div class="table-wrap"><table><thead><tr><th>想做的事</th><th>做法</th><th>代价</th></tr></thead><tbody><tr><td>某些页面要口令才能看</td><td>用 site-vault 把整页 AES 加密后发布</td><td>密文公开，强度全靠口令</td></tr><tr><td>换自己的域名</td><td>仓库 Settings → Pages → Custom domain，再配 CNAME 解析</td><td>域名年费</td></tr><tr><td>看访问量</td><td>接一个隐私友好的统计（如自建 Umami）</td><td>多一个服务要维护</td></tr></tbody></table></div>
+
+<p>第一条要额外说一句：GitHub Pages 没有服务端，所以「加密」只能是「浏览器端解密」。页面本身是公开的密文，谁都可以下载下来离线穷举口令。真要拦住人，得靠有后端的登录系统，而不是静态页加密。</p>
+
+<hr />
+
+<h2>路线 B：不借助 AI，纯手搓</h2>
+
+<p>这条路慢，但走完你会知道每个文件为什么存在。全程只用 GitHub 网页、Git 和一个文本编辑器。</p>
+
+<h3>第 1 步 · 准备三样东西（<strong>唯一</strong>）</h3>
+
+<p>GitHub 账号、Git、编辑器。Git 用 <code>git --version</code> 验证。编辑器推荐 VS Code，但系统自带的 TextEdit 也能写——保存时注意关掉「智能引号」，它会把你代码里的引号换成中文引号，页面直接坏。</p>
+
+<h3>第 2 步 · 建仓库（<strong>唯一</strong>：仓库名固定）</h3>
+
+<p>github.com → New repository → 仓库名填 <code>用户名.github.io</code> → Public → 不初始化任何文件 → Create。</p>
+
+<p>名字必须精确匹配，理由和路线 A 第 3 步一样：名字不对就变成项目页，地址多一层。</p>
+
+<h3>第 3 步 · 拿到本地副本（三种做法）</h3>
+
+<p>做法一，命令行：</p>
+
+<pre><code>git clone https://github.com/用户名/用户名.github.io.git
+cd 用户名.github.io</code></pre>
+
+<p>做法二，GitHub Desktop：File → Clone repository → 选刚建的仓库。</p>
+
+<p>做法三，零安装：不 clone，直接在网页上 Add file → Create new file 把文件一个个建出来。能用，但每改一次都要在网页上提交，文件多了会很累。</p>
+
+<h3>第 4 步 · 写首页</h3>
+
+<p>在仓库根目录新建 <code>index.html</code>，内容如下。这是一个能直接跑的完整版本，改掉中文的部分就是你自己的站：</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot; /&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+&lt;title&gt;你的名字 · 个人主页&lt;/title&gt;
+&lt;style&gt;
+  :root {
+    --bg: #f7f7fb; --card: #ffffff; --text: #1c1c28;
+    --muted: #5b5b6b; --accent: #5b5bf0; --border: #e6e6ef;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0e0e16; --card:#171722; --text:#f0f0f6; --muted:#a6a6b8; --border:#2a2a38; }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.75; padding: 0 20px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  header { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
+  h1 {
+    font-size: clamp(40px, 8vw, 72px); letter-spacing: -0.02em;
+    background: linear-gradient(120deg, var(--accent), #9b5bf0);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .lead { color: var(--muted); max-width: 560px; }
+  a { color: var(--accent); text-decoration: none; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 24px 0 60px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
+  .card h3 { font-size: 17px; margin-bottom: 6px; }
+  .card p { color: var(--muted); font-size: 15px; }
+  footer { padding: 40px 0 60px; color: var(--muted); font-size: 13px; text-align: center; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;wrap&quot;&gt;
+  &lt;header&gt;
+    &lt;h1&gt;你的名字&lt;/h1&gt;
+    &lt;p class=&quot;lead&quot;&gt;一句话说清你是谁、在做什么。&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;/blog/&quot;&gt;博客 / 教程 →&lt;/a&gt;&lt;/p&gt;
+  &lt;/header&gt;
+
+  &lt;div class=&quot;cards&quot;&gt;
+    &lt;div class=&quot;card&quot;&gt;&lt;h3&gt;项目一&lt;/h3&gt;&lt;p&gt;一句话介绍。&lt;/p&gt;&lt;/div&gt;
+    &lt;div class=&quot;card&quot;&gt;&lt;h3&gt;项目二&lt;/h3&gt;&lt;p&gt;一句话介绍。&lt;/p&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;footer&gt;© &lt;span id=&quot;y&quot;&gt;&lt;/span&gt; 你的名字&lt;/footer&gt;
+&lt;/div&gt;
+&lt;script&gt;document.getElementById('y').textContent = new Date().getFullYear();&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<p>几个容易写错的地方：<code>charset</code> 那行必须在 <code>head</code> 最前面，否则中文变乱码；<code>viewport</code> 那行删了，手机上页面会缩成一小块；<code>box-sizing: border-box</code> 那行删了，加 padding 就会撑出横向滚动条。</p>
+
+<h3>第 5 步 · 建共用样式表</h3>
+
+<p>新建 <code>assets/blog.css</code>。首页样式内联是为了少一个请求，博客页因为文件多，抽成共用样式更省事：</p>
+
+<pre><code>:root { --bg:#f7f7fb; --card:#fff; --text:#1c1c28; --muted:#5b5b6b; --accent:#5b5bf0; --border:#e6e6ef; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#0e0e16; --card:#171722; --text:#f0f0f6; --muted:#a6a6b8; --border:#2a2a38; }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.75; padding: 0 20px;
+}
+.wrap { max-width: 760px; margin: 0 auto; }
+a { color: var(--accent); text-decoration: none; }
+
+nav { display: flex; justify-content: space-between; padding: 20px 0;
+      border-bottom: 1px solid var(--border); margin-bottom: 36px; }
+nav a { color: var(--muted); }
+
+article h1 { font-size: clamp(28px, 5vw, 40px); margin-bottom: 12px; }
+article h2 { font-size: 22px; margin: 32px 0 10px; }
+article p, article ul, article ol { margin: 14px 0; }
+article ul, article ol { margin-left: 22px; }
+article .meta { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+article pre { background: var(--card); border: 1px solid var(--border);
+              border-radius: 12px; padding: 16px; overflow: auto; }
+article code { font-family: ui-monospace, Menlo, monospace; font-size: 0.9em; }
+article blockquote { border-left: 3px solid var(--accent); padding: 8px 18px;
+                     color: var(--muted); margin: 18px 0; }
+article img { max-width: 100%; border-radius: 12px; }
+
+.post-item { display: block; background: var(--card); border: 1px solid var(--border);
+             border-radius: 16px; padding: 20px 22px; margin-bottom: 14px; }
+.post-item h2 { font-size: 19px; margin: 6px 0; color: var(--text); }
+.post-item p { color: var(--muted); font-size: 15px; }
+.date { font-size: 13px; color: var(--muted); }
+
+footer { padding: 40px 0 60px; color: var(--muted); font-size: 13px;
+         text-align: center; border-top: 1px solid var(--border); margin-top: 40px; }</code></pre>
+
+<p>变量只在 <code>:root</code> 里定义一次，暗色模式那段把它覆盖一遍，全部样式自动跟着变。想换主题色，改 <code>--accent</code> 一行就够，不用在文件里搜十六进制色值。</p>
+
+<h3>第 6 步 · 建文章列表页</h3>
+
+<p>新建 <code>blog/index.html</code>：</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot; /&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+&lt;title&gt;博客 · 你的名字&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;/assets/blog.css&quot; /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;wrap&quot;&gt;
+  &lt;nav&gt;
+    &lt;a href=&quot;/&quot;&gt;← 回首页&lt;/a&gt;
+    &lt;a href=&quot;https://github.com/你的用户名&quot;&gt;GitHub&lt;/a&gt;
+  &lt;/nav&gt;
+
+  &lt;h1&gt;文章&lt;/h1&gt;
+
+  &lt;div style=&quot;margin-top:24px&quot;&gt;
+    &lt;a class=&quot;post-item&quot; href=&quot;/blog/first.html&quot;&gt;
+      &lt;span class=&quot;date&quot;&gt;2026-10-31&lt;/span&gt;
+      &lt;h2&gt;第一篇文章&lt;/h2&gt;
+      &lt;p&gt;这里放一句话摘要，让人知道点进去能读到什么。&lt;/p&gt;
+    &lt;/a&gt;
+  &lt;/div&gt;
+
+  &lt;footer&gt;© 你的名字&lt;/footer&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<p>以后每加一篇文章，就在 <code>post-item</code> 那一堆 <code>&lt;a&gt;</code> 里复制一个、放到最上面。这就是纯手搓路线的日常成本：<strong>文章和列表永远是两处，必须同步改</strong>。</p>
+
+<h3>第 7 步 · 写第一篇文章</h3>
+
+<p>新建 <code>blog/first.html</code>：</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot; /&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+&lt;title&gt;第一篇文章 · 你的名字&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;/assets/blog.css&quot; /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;wrap&quot;&gt;
+  &lt;nav&gt;
+    &lt;a href=&quot;/&quot;&gt;← 回首页&lt;/a&gt;
+    &lt;a href=&quot;/blog/&quot;&gt;博客&lt;/a&gt;
+  &lt;/nav&gt;
+
+  &lt;article&gt;
+    &lt;h1&gt;第一篇文章&lt;/h1&gt;
+    &lt;div class=&quot;meta&quot;&gt;2026-10-31&lt;/div&gt;
+
+    &lt;p&gt;开头一段，说清这篇解决什么问题。&lt;/p&gt;
+
+    &lt;h2&gt;小标题&lt;/h2&gt;
+    &lt;p&gt;正文。段落里的 &lt;code&gt;行内代码&lt;/code&gt; 用 code 标签，粗体用 strong。&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;# 代码块直接放在 pre 里
+echo &quot;hello&quot;&lt;/code&gt;&lt;/pre&gt;
+
+    &lt;blockquote&gt;引用或强调。&lt;/blockquote&gt;
+  &lt;/article&gt;
+
+  &lt;footer&gt;© 你的名字&lt;/footer&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<p><code>pre</code> 里面的代码必须把 <code>&amp;</code> 写成 <code>&amp;amp;</code>、<code>&lt;</code> 写成 <code>&amp;lt;</code>，否则浏览器会当成标签解析掉。这是手写 HTML 最烦的一点，也是后来改用 Markdown 的主要原因。</p>
+
+<h3>第 8 步 · 放一个空的 .nojekyll（<strong>唯一</strong>）</h3>
+
+<p>在仓库根目录新建一个<strong>空文件</strong>，文件名就是 <code>.nojekyll</code>，注意前面有个点。</p>
+
+<p>作用：关掉 GitHub 默认的 Jekyll 处理。不关会出两个问题。一是 Jekyll 会忽略所有以下划线开头的文件（<code>_config.yml</code>、<code>_layouts/</code> 这类），你以后想用就没了。二是 Jekyll 会把 <code>{{ }}</code> 当成模板变量替换，页面里只要出现双花括号就被吃成空白——做模板的时候必然踩到。</p>
+
+<p>命令行建：<code>touch .nojekyll</code>。网页建：Add file → Create new file，文件名填 <code>.nojekyll</code>，内容留空也能提交。</p>
+
+<h3>第 9 步 · 提交推送（三种做法）</h3>
+
+<p>做法一，命令行：</p>
+
+<pre><code>git add .
+git commit -m &quot;first commit&quot;
+git branch -M main
+git push -u origin main</code></pre>
+
+<p>做法二，GitHub Desktop：左下角填一句摘要 → Commit to main → Push origin。</p>
+
+<p>做法三，网页 Upload files：把整个目录拖进去提交。适合一次传一堆图片，但会丢掉提交粒度。</p>
+
+<h3>第 10 步 · 开启 Pages（<strong>唯一</strong>）</h3>
+
+<p>仓库 → Settings → Pages → Source 选 <code>Deploy from a branch</code> → Branch 选 <code>main</code>、目录 <code>/ (root)</code> → Save。等一到三分钟。</p>
+
+<h3>第 11 步 · 验收与排错</h3>
+
+<p>先验首页：</p>
+
+<pre><code>curl -s -o /dev/null -w '%{http_code}\n' https://用户名.github.io/</code></pre>
+
+<p>不是 200 就对照下表：</p>
+
+<div class="table-wrap"><table><thead><tr><th>现象</th><th>原因</th><th>处理</th></tr></thead><tbody><tr><td>打开是 README 内容</td><td>根目录没有 index.html，Pages 回退去渲染 README</td><td>补一个 index.html</td></tr><tr><td>全程 404</td><td>仓库名不是 <code>用户名.github.io</code>，或者分支选错</td><td>改名，或检查 Pages 里的分支与目录</td></tr><tr><td>页面出来但没样式</td><td>链接写成 <code>assets/blog.css</code> 少了开头斜杠，或大小写不符</td><td>统一改成 <code>/assets/blog.css</code></td></tr><tr><td>改了代码线上没变</td><td>Pages 的 CDN 有缓存</td><td>强制刷新，或等两分钟</td></tr><tr><td>文件名带下划线的页面 404</td><td>被 Jekyll 忽略</td><td>加 <code>.nojekyll</code></td></tr><tr><td>页面局部变成空白</td><td>内容里有 <code>{{ }}</code> 被 Jekyll 当变量</td><td>同上，加 <code>.nojekyll</code></td></tr><tr><td>中文图片名打不开</td><td>URL 被百分号编码，或大小写不一致</td><td>文件名改成英文小写加连字符</td></tr></tbody></table></div>
+
+<p>最后一行值得单独记一下：中文文件名能用，但地址会变成一串 <code>%E4%B8%AD...</code>，复制分享很难看，也容易在别的工具里拼错。资源文件统一用英文小写加连字符最省心。</p>
+
+<h3>第 12 步 · 以后的日常</h3>
+
+<p>手搓路线的发文流程固定三步：</p>
+
+<ol><li>复制 <code>blog/first.html</code> 成 <code>blog/新文章名.html</code>，改标题、日期、正文</li><li>打开 <code>blog/index.html</code>，在最上面加一个 <code>post-item</code></li><li><code>git add . &amp;&amp; git commit -m &quot;post: 标题&quot; &amp;&amp; git push</code></li></ol>
+
+<p>文章超过十篇之后，第 2 步会开始烦人：很容易忘了加、或者加了链接指错文件。想摆脱这一点，就得回到路线 A 的第 10 步——把列表改成数据驱动，这是这套方案里唯一需要动代码的改造。</p>
+
+<hr />
+
+<h2>两条路的差别在哪</h2>
+
+<div class="table-wrap"><table><thead><tr><th>对比项</th><th>路线 A · 借 WorkBuddy</th><th>路线 B · 纯手搓</th></tr></thead><tbody><tr><td>第一次成型</td><td>半小时左右</td><td>一到两小时</td></tr><tr><td>你实际动手的环节</td><td>装软件、点 Pages 开关、验收</td><td>每一步都要动手</td></tr><tr><td>发一篇新文章</td><td>一条命令，或手机上建个 md</td><td>改两个 HTML 文件</td></tr><tr><td>出问题时的排查</td><td>把报错贴回去让它查</td><td>自己对照排错表</td></tr><tr><td>学到的东西</td><td>知道系统长什么样、卡在哪</td><td>知道每个标签为什么这么写</td></tr></tbody></table></div>
+
+<p>如果只是想有个能写东西的地方，走 A。如果目的是「搞明白静态站是怎么跑起来的」，走 B，而且建议走完 B 之后再回头看 A 的产出，那时候 <code>publish.py</code> 里那些处理中文换行、排序、缓存的细节你会一眼看懂。</p>
+
+<p>两条路最后都会落到同一句话上：这个博客没有后台，它的后台是一个文件加一次推送。想清楚这一点，剩下全是体力活。</p>
+
+    <hr />
+    <p><a class="btn ghost" href="/blog/">← 返回文章列表</a></p>
+  </article>
+
+  <footer>© <span id="year"></span> 大白 · Built with GitHub Pages</footer>
+</div>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

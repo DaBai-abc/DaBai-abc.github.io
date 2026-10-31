@@ -1,5 +1,16 @@
 [
   {
+    "slug": "build-blog-from-zero",
+    "title": "从零搭一个 GitHub Pages 博客：借 AI 一条路，纯手搓一条路",
+    "date": "2026-10-31",
+    "tag": "教程",
+    "tags": [
+      "教程"
+    ],
+    "summary": "把这个站点从头复刻一遍。路线 A 用 WorkBuddy 一步步对话搭起来，路线 B 完全不靠 AI 手写 HTML，两条路都标明了哪些步骤有得选、哪些步骤只有一种做法。",
+    "ts": "2026-10-31T19:19:16"
+  },
+  {
     "slug": "publish-guide",
     "title": "在这个博客上发文：三条路，从电脑到手机",
     "date": "2026-10-31",
