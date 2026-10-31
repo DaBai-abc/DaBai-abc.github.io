@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<!-- ============================================================
+     文章模板 · 用法：
+     1. 复制本文件到 /blog/ 下，改名为你的英文短名，例如 /blog/github-pages-guide.html
+     2. 替换 <title>、<meta name="description">、<h1>、日期、标签、正文
+     3. 在 /blog/index.html 的 .post-list 里复制一个 <a class="post-item"> 块，指向新文件
+     ============================================================ -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>文章标题 · 大白</title>
+<meta name="description" content="一句话摘要，会出现在搜索结果和分享卡片里。" />
+<link rel="stylesheet" href="/assets/blog.css" />
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="nav">
+    <a class="brand" href="/">大白<span>.</span></a>
+    <div class="menu">
+      <a href="/">首页</a>
+      <a href="/blog/">博客</a>
+      <a href="/blog/resources.html">资源</a>
+      <a href="https://github.com/DaBai-abc" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </nav>
+
+  <article>
+    <h1>文章标题</h1>
+    <div class="meta">
+      <span>2026-01-01</span>
+      <span class="tag">标签</span>
+    </div>
+
+    <p>开头一段，说清这篇文章解决什么问题、读者能带走什么。</p>
+
+    <h2>小标题</h2>
+    <p>正文。</p>
+
+    <ul>
+      <li>列表项</li>
+    </ul>
+
+    <pre><code># 代码块示例
+echo "hello"</code></pre>
+
+    <blockquote>引用或强调。</blockquote>
+
+    <div class="callout">
+      <span class="label">提示</span>
+      <p>需要强调的注意事项放这里。</p>
+    </div>
+
+    <hr />
+    <p><a class="btn ghost" href="/blog/">← 返回文章列表</a></p>
+  </article>
+
+  <footer>© <span id="year"></span> 大白 · Built with GitHub Pages</footer>
+</div>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

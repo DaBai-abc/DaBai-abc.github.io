@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>博客 · 大白</title>
+<meta name="description" content="大白的博客：教程、笔记与资源。" />
+<link rel="stylesheet" href="/assets/blog.css" />
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="nav">
+    <a class="brand" href="/">大白<span>.</span></a>
+    <div class="menu">
+      <a href="/">首页</a>
+      <a href="/blog/">博客</a>
+      <a href="/blog/resources.html">资源</a>
+      <a href="https://github.com/DaBai-abc" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </nav>
+
+  <div class="page-head">
+    <h1>博客 / 教程</h1>
+    <p>把踩过的坑、跑通的流程写下来。偶尔也整理一些可复用的资源。</p>
+  </div>
+
+  <!-- ============================================================
+       新增文章：复制下面这一个 <a class="post-item"> 整块，
+       改 href（指向 /blog/你的文件名.html）、日期、标题、摘要、标签。
+       最新的放最上面。
+       ============================================================ -->
+  <div class="post-list">
+
+    <a class="post-item" href="/blog/welcome.html">
+      <span class="date">2026-10-31</span>
+      <h2>开篇：这个博客要写什么</h2>
+      <p>记录教程、笔记与工具实践。这是第一篇文章，也是一份写作与发布的说明。</p>
+      <div><span class="tag">随笔</span></div>
+    </a>
+
+  </div>
+
+  <footer>© <span id="year"></span> 大白 · Built with GitHub Pages</footer>
+</div>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
