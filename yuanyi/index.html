@@ -168,7 +168,7 @@
       一个人和内容的小岛。原本是微信小程序，现在后端跑在家里的 NAS 上，浏览器打开就能用：注册、登录、发布、浏览。
     </p>
     <div class="cta">
-      <a class="btn primary" href="http://192.168.3.120:8097/" target="_blank" rel="noopener">进入网页版</a>
+      <a class="btn primary" href="https://dabai-nas.tailb6e55f.ts.net/yuanyi/" target="_blank" rel="noopener">进入网页版</a>
       <a class="btn ghost" href="#how">它是怎么跑起来的</a>
     </div>
   </header>
@@ -180,25 +180,22 @@
         <tr>
           <th>场景</th>
           <th>地址</th>
-          <th>状态</th>
-        </tr>
-        <tr>
-          <td>同一局域网</td>
-          <td><code>192.168.3.120:8097</code></td>
-          <td>可用 · 直连 NAS，不经过公网</td>
+          <th>说明</th>
         </tr>
         <tr>
           <td>任意网络</td>
-          <td><code>dabai-nas.tailb6e55f.ts.net</code></td>
-          <td>待开启 · 需要为它单独安排一条外网通路</td>
+          <td><code>dabai-nas.tailb6e55f.ts.net/yuanyi/</code></td>
+          <td>HTTPS，出门在外也能开</td>
+        </tr>
+        <tr>
+          <td>同一局域网</td>
+          <td><code>192.168.3.120:8097/yuanyi/</code></td>
+          <td>直连 NAS，不经过公网，速度最快</td>
         </tr>
       </table>
     </div>
     <div class="note">
       <strong>它不是小程序。</strong>微信里的代码包只能存在微信服务器上，NAS 无法托管。所以这里提供的是它的网页版，微信搜不到、也扫不到码。功能是一样的。
-    </div>
-    <div class="note">
-      <strong>为什么外网还没开：</strong>现有外网通道（Tailscale Funnel）只开放 443 / 8443 / 10000 三个端口，已经分别给了高报、排课、写作三个工具。元一岛屿要挤进去，只能挂在这三个端口之下的一条子路径上，而这需要前端按子路径重新打包一次——本机 4 核、编译负载偏高，这一步暂时没有完成。局域网内使用完全不受影响。
     </div>
   </section>
 
